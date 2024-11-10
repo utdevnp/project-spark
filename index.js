@@ -15,13 +15,18 @@ if (!fs.existsSync(templatesDir)) {
   fs.mkdirSync(templatesDir, { recursive: true });
 }
 
-
 async function setupProject() {
   // Get the list of available templates (subdirectories in the templates folder)
   const templates = fs.readdirSync(templatesDir).filter((file) => {
     const templatePath = path.join(templatesDir, file);
     return fs.statSync(templatePath).isDirectory();
   });
+
+  // Check if templates are available
+  if (templates.length === 0) {
+    console.log(chalk.red("No templates found in the 'templates' directory."));
+    return;
+  }
 
   // Prompt the user to select a template
   const { templateName } = await inquirer.prompt([
@@ -90,7 +95,7 @@ async function setupProject() {
   copyAndReplace(selectedTemplateDir);
 
   // Create the .env file from the .env.sample file if it exists
-  const envSamplePath = path.join(templatesDir, '.env.sample');
+  const envSamplePath = path.join(selectedTemplateDir, '.env.sample');
   const envFilePath = path.join(projectDir, '.env');
   if (fs.existsSync(envSamplePath)) {
     fs.copyFileSync(envSamplePath, envFilePath);
@@ -117,7 +122,7 @@ async function setupProject() {
   console.log(chalk.cyan(`Your new project is located in: ${projectDir}`));
   console.log(chalk.yellow(`\nTo start your project, run the following commands:`));
   console.log(chalk.yellow(`cd ${projectName}`));
-  console.log(chalk.yellow(`nm run start:dev`));
+  console.log(chalk.yellow(`npm run start:dev`));
 }
 
 // Run the setup function

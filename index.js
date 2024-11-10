@@ -5,14 +5,23 @@ import path from 'path';
 import inquirer from 'inquirer';
 import { execSync } from 'child_process';
 import chalk from 'chalk';
+import pkgDir from 'pkg-dir';  // Used to find the package directory
 
-// Define the path to the local templates folder
-const templatesDir = path.join(process.cwd(), 'templates');
+// Find the root directory of the current project
+const packageDir = pkgDir.sync(process.cwd()); // Finds the root of the current package
 
-// Check if the templates directory exists and create it if not
+if (!packageDir) {
+  console.log(chalk.red("Could not find the package directory."));
+  process.exit(1);  // Exit if package directory is not found
+}
+
+// Define the path to the templates folder inside the project-spark package
+const templatesDir = path.join(packageDir, 'node_modules', 'project-spark', 'templates');
+
+// Check if the templates directory exists
 if (!fs.existsSync(templatesDir)) {
-  console.log(chalk.yellow(`Templates directory not found. Creating ${templatesDir}...`));
-  fs.mkdirSync(templatesDir, { recursive: true });
+  console.log(chalk.red("Templates directory not found in the package. Please make sure your package is correctly installed."));
+  process.exit(1);
 }
 
 async function setupProject() {

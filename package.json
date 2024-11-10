@@ -1,14 +1,11 @@
 {
   "name": "project-spark",
-  "version": "1.1.0",  
+  "version": "1.2.0",  
   "type": "module", 
   "description": "A CLI tool for generating projects template.",
   "main": "index.js", 
   "bin": {
     "project-spark": "./index.js"  
-  },
-  "scripts": {
-    "start:dev": "node ./index.js"  
   },
   "dependencies": {
     "chalk": "^4.1.2", 
